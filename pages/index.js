@@ -1,53 +1,49 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import { getSortedPostsData } from '../lib/posts'
+import Date from '../components/date'
 
-export default function Home() {
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData()
+  return {
+    props: {
+      allPostsData
+    }
+  }
+}
+
+export default function Home({ allPostsData }) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Test App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Read <Link href="/posts/first-post"><a>this page!</a></Link>
         </h1>
 
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <section className="description">
+          <ul>
+            {allPostsData.map(({ id, date, title }) => (
+              <li key={id}>
+                <Link href={`/posts/${id}`}>
+                  <a>{title}</a>
+                </Link>
+                <br />
+                <small>
+                  <Date dateString={date} />
+                </small>
+              </li>
+            ))}
+          </ul>
+        </section>
       </main>
-
       <footer>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
@@ -55,7 +51,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
+          <img src="./vercel.svg" alt="Vercel Logo" className="logo" />
         </a>
       </footer>
 
@@ -116,7 +112,7 @@ export default function Home() {
         .title {
           margin: 0;
           line-height: 1.15;
-          font-size: 4rem;
+          font-size: 6rem;
         }
 
         .title,
@@ -126,7 +122,7 @@ export default function Home() {
 
         .description {
           line-height: 1.5;
-          font-size: 1.5rem;
+          font-size: 2rem;
         }
 
         code {
@@ -195,8 +191,8 @@ export default function Home() {
         body {
           padding: 0;
           margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+          font-family: Segoe UI, Roboto,
+            Oxygen, Ubuntu, Fira Sans, Droid Sans, Helvetica Neue,
             sans-serif;
         }
 
